@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ff660fd860d5dd40bc204cce745ab97, type: 3}
+  m_Name: NewFraktalWindowRessources1
+  m_EditorClassIdentifier: 
+  windowTitle: FRAKTAL WINDOW
+  windowTitleFont: {fileID: 12800000, guid: 4fda0bb00d17c354c9a496565a2876e6, type: 3}
+  windowTitleContainerColor: {r: 0.754717, g: 0.33819866, b: 0.33819866, a: 1}
+  windowMainContainerColor: {r: 0.6132076, g: 0.6132076, b: 0.6132076, a: 1}
+  windowLevelContainerColor: {r: 0.43360627, g: 0.4508184, b: 0.4528302, a: 1}
+  windowMainImage: {fileID: 2800000, guid: 8afa0c15076334748afe3ce695ebfe0b, type: 3}

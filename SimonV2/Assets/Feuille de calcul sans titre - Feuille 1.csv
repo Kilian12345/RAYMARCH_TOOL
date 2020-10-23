@@ -1,0 +1,6 @@
+#	Nom	Intitulé	Min	Max
+0	Killing spree	Tuez $number ennemis	20	40
+1	Survival	Survivez $number secondes	10	630
+2	Killing spree	Tuez $number ennemis	0	1220
+3	Survival	Survivez $number secondes	-10	1810
+4	Killing spree	Tuez $number ennemis	-20	2400
