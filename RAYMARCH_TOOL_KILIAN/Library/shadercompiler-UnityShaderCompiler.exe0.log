@@ -1,26 +1,7 @@
 Base path: 'C:/Program Files/Unity/Hub/Editor/2019.4.12f1/Editor/Data', plugins path 'C:/Program Files/Unity/Hub/Editor/2019.4.12f1/Editor/Data/PlaybackEngines'
 Cmd: initializeCompiler
 Cmd: preprocessCompute
-  insize=5808 outsize=5810 ok=1
+  insize=6270 outsize=6269 ok=1
 Cmd: compileComputeKernel
-  error: 1 plat 4 at Fractal.compute(138): implicit truncation of vector type
-  api=4 insize=5810 outsize=34928 ok=1
-Cmd: preprocessCompute
-  insize=421 outsize=420 ok=1
-Cmd: compileComputeKernel
-  api=4 insize=420 outsize=461 ok=1
-Cmd: preprocessCompute
-  insize=6078 outsize=6077 ok=1
-Cmd: compileComputeKernel
-  error: 1 plat 4 at FractalComputePreview.compute(138): implicit truncation of vector type
-  api=4 insize=6077 outsize=34928 ok=1
-Cmd: preprocessCompute
-  insize=6350 outsize=6349 ok=1
-Cmd: compileComputeKernel
-  error: 2 plat 4 at FractalComputePreview.compute(73): incorrect number of arguments to numeric-type constructor
-  api=4 insize=6349 outsize=0 ok=0
-Cmd: preprocessCompute
-  insize=6259 outsize=6258 ok=1
-Cmd: compileComputeKernel
-  error: 2 plat 4 at FractalComputePreview.compute(73): incorrect number of arguments to numeric-type constructor
-  api=4 insize=6258 outsize=0 ok=0
+  error: 2 plat 4 at FractalComputePreview.compute(76): incorrect number of arguments to numeric-type constructor
+  api=4 insize=6269 outsize=0 ok=0
