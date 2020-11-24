@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e9dd86d91b315b4aa99a9da8643a1b0, type: 3}
+  m_Name: FraktalWindowEditor
+  m_EditorClassIdentifier: 
+  fractalComputePreview: {fileID: 7200000, guid: e9cf4a8808305f94c810ec2c2d9c55fc,
+    type: 3}
+  fraktalRessource: {fileID: 11400000, guid: 37b09c59481e32549baf57035ba4ca2b, type: 2}
+  gamePlayLevel: {fileID: 11400000, guid: ce0072e6096398e49bf347b5cb125344, type: 2}
+  Levels:
+  - {fileID: 11400000, guid: a1f72facf4af5244ab88d624b887c06a, type: 2}
+  - {fileID: 11400000, guid: f87c486cca4ae0c4bb040889adc627a3, type: 2}
+  - {fileID: 11400000, guid: f9c70447fb353274a8371e3e88457392, type: 2}
+  - {fileID: 11400000, guid: 77006a20834e7b14abed5cf2ac4af35e, type: 2}
+  toolBarRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 30
+  spawnRect:
+    serializedVersion: 2
+    x: 1.34
+    y: 5
+    width: 8
+    height: 20
+  saveRect:
+    serializedVersion: 2
+    x: 2.54
+    y: 5
+    width: 8
+    height: 20
+  helpUiALLRect:
+    serializedVersion: 2
+    x: 14.3
+    y: 5
+    width: 8
+    height: 20
+  timerALLRect:
+    serializedVersion: 2
+    x: 5.04
+    y: 5
+    width: 8
+    height: 20
+  deleteALL:
+    serializedVersion: 2
+    x: 1.8
+    y: 5
+    width: 6
+    height: 20

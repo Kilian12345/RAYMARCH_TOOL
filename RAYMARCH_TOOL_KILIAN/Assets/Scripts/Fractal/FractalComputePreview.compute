@@ -1,14 +1,11 @@
 ﻿#pragma kernel CSMain
      
 
-
-
-
 RWTexture2D<float4> Destination;
 
-float3 _CameraToWorld;
-float3 _CameraRotation;
-float3 _LightDirection;
+float4x4 _CameraToWorld;
+float4x4 _CameraInverseProjection;
+float3 _Light;
 
 float power;
 float darkness;
@@ -48,9 +45,9 @@ Ray CreateRay(float3 origin, float3 direction) {
 }
 
 Ray CreateCameraRay(float2 uv) {
-    float3 origin = _CameraToWorld;
-    float3 direction = _CameraRotation;
-    direction = _CameraToWorld * _CameraRotation;
+    float3 origin = mul(_CameraToWorld, float4(0, 0, 0, 1)).xyz;
+    float3 direction = mul(_CameraInverseProjection, float4(uv, 0, 1)).xyz;
+    direction = mul(_CameraToWorld, float4(direction, 0)).xyz;
     direction = normalize(direction);
     return CreateRay(origin, direction);
 }
@@ -73,7 +70,7 @@ float CubeDistance(float3 eye, float3 centre, float3 size) {
 
 float Mandlebulb(float3 eye, float3 centre, float2 rot)
 {
-    float3 size = float3(0);
+    float3 size = float3(0,0,0);
     float3 z = eye;
     z += centre;
     z.xz = mul(z.xz, op_rotate(rot.x));///////// ROTATION
@@ -114,7 +111,7 @@ float Mandlebulb(float3 eye, float3 centre, float2 rot)
 
 float TetrahedralSierpinski(float3 eye, float3 centre, float2 rot)
 {
-    float3 size = float3(2);
+    float3 size = float3(2,2,2);
     float3 a1 = float3(1, 1, 1);
     float3 a2 = float3(-1, -1, 1);
     float3 a3 = float3(1, -1, -1);
@@ -186,6 +183,8 @@ float2 SceneInfo(float3 position) {
 
     float Dst = FractalTypeDst(FractalType, position, float3(0, 0, 0), rotation);
 
+    //Dst = TetrahedralSierpinski(position, float3(0, 0, 0), rotation);
+
     return float2(7, Dst);
 }
 
@@ -224,7 +223,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
             float escapeIterations = sceneInfo.x;
             float3 normal = EstimateNormal(ray.origin - ray.direction * epsilon * 2);
 
-            float colourA = saturate(dot(normal * .5 + .5, -_LightDirection));
+            float colourA = saturate(dot(normal * .5 + .5, -_Light));
             float colourB = saturate(escapeIterations / 16.0);
             float3 colourMix = saturate(colourA * colourAMix + colourB * colourBMix);
 

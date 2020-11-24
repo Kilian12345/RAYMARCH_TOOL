@@ -29,13 +29,20 @@ public class FractalMaster : MonoBehaviour
     public float powerIncreaseSpeed = 0.2f;
 
 
+    public Color ColorPlayer1 = Color.white;
+    public Color ColorPlayer2 = Color.white;
 
-   [HideInInspector] public float _XRotationAxisObjectif;
+    public Color ColorObjective1 = Color.red;
+    public Color ColorObjective2 = Color.red;
+
+
+    [HideInInspector] public float _XRotationAxisObjectif;
    [HideInInspector] public float _ZRotationAxisObjectif;
    [HideInInspector] public float _XRotationAxisPlayer;
    [HideInInspector] public float _ZRotationAxisPlayer;
 
 
+    public int FractalType = 1;
 
     [Range(0,10)]public float SeparationDistance;
     [Range(0, 1)] public float FractalVisibility;
@@ -74,7 +81,7 @@ public class FractalMaster : MonoBehaviour
         int threadGroupsY = Mathf.CeilToInt (cam.pixelHeight / 8.0f);
         fractalShader.Dispatch (0, threadGroupsX, threadGroupsY, 1);
 
-        Graphics.Blit (target, target);
+        Graphics.Blit (target, destination);
 
     }
 
@@ -93,8 +100,12 @@ public class FractalMaster : MonoBehaviour
         fractalShader.SetFloat ("SeparationDistance", SeparationDistance);
         fractalShader.SetFloat ("FractalVisibility", FractalVisibility);
 
-        fractalShader.SetVector ("colourAMix", new Vector3 (redA, greenA, blueA));
-        fractalShader.SetVector ("colourBMix", new Vector3 (redB, greenB, blueB));
+        fractalShader.SetInt("FractalType", FractalType);
+
+        fractalShader.SetVector ("colourAMixObj", new Vector3 (ColorObjective1.r, ColorObjective1.g, ColorObjective1.b));
+        fractalShader.SetVector ("colourBMixObj", new Vector3(ColorObjective2.r, ColorObjective2.g, ColorObjective2.b));
+        fractalShader.SetVector ("colourAMixPla", new Vector3(ColorPlayer1.r, ColorPlayer1.g, ColorPlayer1.b));
+        fractalShader.SetVector ("colourBMixPla", new Vector3(ColorPlayer2.r, ColorPlayer2.g, ColorPlayer2.b));
 
         fractalShader.SetMatrix ("_CameraToWorld", cam.cameraToWorldMatrix);
         fractalShader.SetMatrix ("_CameraInverseProjection", cam.projectionMatrix.inverse);

@@ -25,10 +25,11 @@ public class FraktalWindow : EditorWindow
     Rect mainContainerRect;
 
 
+
     [MenuItem("Window/FraktalWindow %&#w")]
     public static void Init()
     {
-        FraktalWindow window = EditorWindow.GetWindow(typeof(FraktalWindow)) as FraktalWindow;
+        FraktalWindow window = EditorWindow.GetWindow(typeof(FraktalWindow)) as FraktalWindow; 
 
         FraktalWindowEditor cur = FindObjectOfType<FraktalWindowEditor>();
         window.current = cur;
@@ -42,8 +43,14 @@ public class FraktalWindow : EditorWindow
 
         window.current = cur;
         window.minSize = new Vector2(850, Screen.height);
+        window.current.Levels.Clear();
 
         window.Show();
+    }
+
+    void Awake()
+    {
+        CheckIfCanDelete();
     }
 
     public void OnGUI()
@@ -57,6 +64,7 @@ public class FraktalWindow : EditorWindow
         ToolBarButton();
         DisplayAllLevels();
         DeleteAllLevels();
+        DisplaySaveButton();
 
         //GUI.Button(new Rect(80,1000, 100, 20), "Bottom-right");
 
@@ -101,6 +109,16 @@ public class FraktalWindow : EditorWindow
         EditorGUI.DrawRect(mainContainerRect, current.windowMainContainerColor);
     }
 
+    void DisplaySaveButton()
+    {
+        float saveBarWidth = 200;
+
+        if (GUI.Button(new Rect(position.width / current.saveRect.x, GetRectYModification(current.saveRect.y), position.width / current.saveRect.width, current.saveRect.height), "SAVE AND TRY"))
+        {
+            SetupGameplay();
+        }
+    }
+
     void ToolBarButton()
     {
 
@@ -109,6 +127,15 @@ public class FraktalWindow : EditorWindow
             listParamId++;
             FractalLevels fp = FractalParameterSpawner.AddFractalLevel(listParamId);
             current.Levels.Add(fp);
+
+
+            Camera PCamera = GameObject.Find("PreviewCamera").GetComponent<Camera>();
+            FractalMaster fractalMaster = GameObject.Find("Main Camera").GetComponent<FractalMaster>();
+            Light directionalLightParam = GameObject.Find("Directional Light").GetComponent<Light>();
+
+            fp.fractalPreviewer = new FractalPreview(current.fractalComputePreview, directionalLightParam, PCamera);
+
+            fp.fractalPreviewer.RenderLevelPreviewFractal(); // Setup The RAYMARCHER
         }
 
         if (GUI.Button(new Rect(position.width / current.helpUiALLRect.x, GetRectYModification(current.helpUiALLRect.y), position.width / current.helpUiALLRect.width, current.helpUiALLRect.height), "ALL HELP UI"))
@@ -136,6 +163,14 @@ public class FraktalWindow : EditorWindow
     {
         if (GUI.Button(new Rect(position.width / current.deleteALL.x, GetRectYModification(current.deleteALL.y), position.width / current.deleteALL.width, current.deleteALL.height), "DELETE ALL LEVELS"))
         {
+            CheckIfCanDelete();
+        }
+    }
+
+    void CheckIfCanDelete()
+    {
+        if (current.Levels != null)
+        {
             for (int i = 0; i < current.Levels.Count; i++)
             {
                 FractalParameterSpawner.DeleteFractalLevel(current.Levels[i]);
@@ -143,23 +178,23 @@ public class FraktalWindow : EditorWindow
             current.Levels.Clear();
         }
     }
-
     #endregion
 
 
     void DisplayAllLevels()
     {
+        float spaceBetweenLevels = 300;
+
         if(current.Levels != null && current.Levels.Count > 0)
         {
             for (int i = 0; i < current.Levels.Count; i++)
             {
-                //DisplayEachLevelObjective(current.Levels[i].fractalObjective, i * 200);
-                DisplayLevelContainer(current.Levels[i], mainContainerRect, i * 300); 
+                DisplayLevelContainer(current.Levels[i], mainContainerRect, i * spaceBetweenLevels); 
             }
         }
     }
 
-    void DisplayEachLevelObjective(FractalParameter fractalParam, Rect levelContainerRect)
+    void DisplayEachLevelObjective(FractalParameter fractalParam, Rect levelContainerRect, FractalPreview fractalPre)
     {
 
         float baseY = 10;
@@ -173,27 +208,27 @@ public class FraktalWindow : EditorWindow
 
         float textureYOffset = levelContainerRect.height / 15;
         float levelContainerNewHeight = (levelContainerRect.height - textureYOffset);
-        float textureWidthHeight = levelContainerNewHeight -50;
+        float textureWidthHeight = levelContainerNewHeight -20;
 
 
 
-        fractalParam.FractalParams.XAxis = EditorGUI.FloatField(
+        fractalParam.FractalParams.XAxis = GUI.HorizontalSlider(
             new Rect(levelContainerRect.x + valueX, levelContainerRect.y + baseY, 50, 15),
-            Mathf.Clamp(fractalParam.FractalParams.XAxis, 0, 1)
+            fractalParam.FractalParams.XAxis, 0, 1
             );
-        EditorGUI.LabelField(new Rect(levelContainerRect.x + labelX, levelContainerRect.y + baseY, 200, 15), "               XAxis"); 
+        EditorGUI.LabelField(new Rect(levelContainerRect.x + labelX, levelContainerRect.y + baseY, 200, 15), "              XAxis");
 
 
-        fractalParam.FractalParams.ZAxis = EditorGUI.FloatField(
+        fractalParam.FractalParams.ZAxis = GUI.HorizontalSlider(
             new Rect(levelContainerRect.x + valueX, levelContainerRect.y + baseY + (spaceY * 1), 50, 15),
-            Mathf.Clamp(fractalParam.FractalParams.ZAxis, 0, 1)
+            fractalParam.FractalParams.ZAxis, 0, 1
             );
-        EditorGUI.LabelField(new Rect(levelContainerRect.x + labelX, levelContainerRect.y + baseY + (spaceY * 1), 200, 15), "               ZAxis");
+        EditorGUI.LabelField(new Rect(levelContainerRect.x + labelX, levelContainerRect.y + baseY + (spaceY * 1), 200, 15), "              ZAxis");
 
 
-        fractalParam.FractalParams.FractalPower = EditorGUI.FloatField(
+        fractalParam.FractalParams.FractalPower = GUI.HorizontalSlider(
             new Rect(levelContainerRect.x + valueX, levelContainerRect.y + baseY + (spaceY * 2), 50, 15),
-            Mathf.Clamp(fractalParam.FractalParams.FractalPower, 0, 1)
+            fractalParam.FractalParams.FractalPower, 0, 20
             );
         EditorGUI.LabelField(new Rect(levelContainerRect.x + labelX, levelContainerRect.y + baseY + (spaceY * 2), 200, 15), "FractalPower");
 
@@ -210,6 +245,7 @@ public class FraktalWindow : EditorWindow
             fractalParam.FractalParams.FractalColor1
             );
         EditorGUI.LabelField(new Rect(levelContainerRect.x + labelX, levelContainerRect.y + baseY + (spaceY * 4), 200, 15), "FractalColor1");
+
 
 
         fractalParam.FractalParams.FractalColor2 = EditorGUI.ColorField(
@@ -237,46 +273,53 @@ public class FraktalWindow : EditorWindow
             levelContainerRect.y + (levelContainerNewHeight * 0.5f) - (textureWidthHeight * 0.5f),
             textureWidthHeight,
             textureWidthHeight),
-            current.windowMainImage
+            fractalPre.targetObjective
             );
 
 
+
+
+        fractalPre._XRotationObjective = fractalParam.FractalParams.XAxis;
+        fractalPre._ZRotationObjective = fractalParam.FractalParams.ZAxis;
+        fractalPre.fractalPower = fractalParam.FractalParams.FractalPower;
+        fractalPre.FractalType = fractalParam.FractalParams.FractalType;
+        fractalPre.ColorObjective1 = fractalParam.FractalParams.FractalColor1;
+        fractalPre.ColorObjective2 = fractalParam.FractalParams.FractalColor2;
+
     }
 
-    void DisplayEachLevelPlayer(FractalParameterPlayer fractalParamPlayer, Rect levelContainerRect)
+    void DisplayEachLevelPlayer(FractalParameterPlayer fractalParamPlayer, Rect levelContainerRect, FractalPreview fractalPre)
     {
 
         float baseY = 50;
         float spaceY = 20;
 
-        float globalX = 50;
+        float globalX = 60;
         float sliderX = 150 + globalX;
         float labelX = 200 + globalX;
         float valueX = 150 + globalX;
-        float textureX = globalX;
+        float textureX = globalX - 20;
 
         float textureYOffset = levelContainerRect.height / 15;
         float levelContainerNewHeight = (levelContainerRect.height - textureYOffset);
-        float textureWidthHeight = levelContainerNewHeight - 50;
+        float textureWidthHeight = levelContainerNewHeight - 20;
 
 
-
-        fractalParamPlayer.FractalParams.XAxis = EditorGUI.FloatField(
+        
+        fractalParamPlayer.FractalParams.XAxis = GUI.HorizontalSlider(
             new Rect(levelContainerRect.x + valueX, levelContainerRect.y + baseY, 50, 15),
-            Mathf.Clamp(fractalParamPlayer.FractalParams.XAxis, 0, 1)
+            fractalParamPlayer.FractalParams.XAxis,0,1
             );
         EditorGUI.LabelField(new Rect(levelContainerRect.x + labelX, levelContainerRect.y + baseY, 200, 15), "XAxis");
 
 
-        fractalParamPlayer.FractalParams.ZAxis = EditorGUI.FloatField(
+        fractalParamPlayer.FractalParams.ZAxis = GUI.HorizontalSlider(
             new Rect(levelContainerRect.x + valueX, levelContainerRect.y + baseY + (spaceY * 1), 50, 15),
-            Mathf.Clamp(fractalParamPlayer.FractalParams.ZAxis, 0, 1)
+            fractalParamPlayer.FractalParams.ZAxis, 0, 1
             );
         EditorGUI.LabelField(new Rect(levelContainerRect.x + labelX, levelContainerRect.y + baseY + (spaceY * 1), 200, 15), "ZAxis");
 
 
-        //fractalParamPlayer.FractalParams.FractalPower = 
-        //fractalParamPlayer.FractalParams.FractalType = 
 
         fractalParamPlayer.FractalParams.FractalColor1 = EditorGUI.ColorField(
             new Rect(levelContainerRect.x + valueX, levelContainerRect.y + baseY + (spaceY * 2), 50, 15),
@@ -300,29 +343,70 @@ public class FraktalWindow : EditorWindow
 
         EditorGUI.Slider(new Rect(levelContainerRect.x + sliderX, levelContainerRect.y + baseY + (spaceY * 5), Mathf.Clamp( (position.width - 850) * 0.5f, 105, 200), 15), 0.5f, 0, 1);
 
-        /*EditorGUI.DrawPreviewTexture(
+        EditorGUI.DrawPreviewTexture(
             new Rect(levelContainerRect.x + textureX,
             levelContainerRect.y + (levelContainerNewHeight * 0.5f) - (textureWidthHeight * 0.5f),
             textureWidthHeight,
             textureWidthHeight),
-            FindObjectOfType<FractalPreview>().TestDegGetTexture()
-            ); */
+            fractalPre.targetPlayer
+            );
 
 
+        fractalPre._XRotationPlayer = fractalParamPlayer.FractalParams.XAxis;
+        fractalPre._ZRotationPlayer = fractalParamPlayer.FractalParams.ZAxis;
+        fractalPre.ColorPlayer1 = fractalParamPlayer.FractalParams.FractalColor1;
+        fractalPre.ColorPlayer2 = fractalParamPlayer.FractalParams.FractalColor2;
     }
+
+
 
     void DisplayLevelContainer(FractalLevels fl ,Rect mainContainerRect, float heightDifference)
     {
         fl.levelWindowRect = new Rect(mainContainerRect.x + 5, mainContainerRect.y + 10 + heightDifference, mainContainerRect.width - mainContainerRect.x - 5, 200);
         EditorGUI.DrawRect(fl.levelWindowRect, current.windowLevelContainerColor);
 
-        DisplayEachLevelObjective(fl.fractalObjective, fl.levelWindowRect);
-        DisplayEachLevelPlayer(fl.fractalPlayer, fl.levelWindowRect);
+        if(fl.levelWindowRect.Contains(Event.current.mousePosition))
+        {
+            fl.fractalPreviewer.RenderLevelPreviewFractal();
+        }
+
+        DisplayEachLevelObjective(fl.fractalObjective, fl.levelWindowRect, fl.fractalPreviewer);
+        DisplayEachLevelPlayer(fl.fractalPlayer, fl.levelWindowRect, fl.fractalPreviewer);
     }
 
     float GetRectYModification(float currentRectY)
     {
         return currentRectY + ((Mathf.Clamp(position.width, 100, 740)) * 0.52f) + 75;
+    }
+
+    void SetupGameplay()
+    {
+
+        for (int i = 0; i < current.Levels.Count; i++)
+        {
+            //Debug.Log("current.fractalGameplayLevels = " + current.fractalGameplayLevels.Length + " = " + current.Levels.Count + " = " + i);
+            //Debug.Log("current.fractalGameplayLevels[i].FPColorPlayer1 = " + current.fractalGameplayLevels[i].FPColorPlayer1);
+
+            current.Levels[i].FPColorPlayer1 = current.Levels[i].fractalPreviewer.ColorPlayer1;
+            current.Levels[i].FPColorPlayer2 = current.Levels[i].fractalPreviewer.ColorPlayer2; 
+            current.Levels[i].FPColorObjective1 = current.Levels[i].fractalPreviewer.ColorObjective1; 
+            current.Levels[i].FPColorObjective2 = current.Levels[i].fractalPreviewer.ColorObjective2; 
+            current.Levels[i].FP_XRotationPlayer = current.Levels[i].fractalPreviewer._XRotationPlayer; 
+            current.Levels[i].FP_ZRotationPlayer = current.Levels[i].fractalPreviewer._ZRotationPlayer; 
+            current.Levels[i].FP_XRotationObjective = current.Levels[i].fractalPreviewer._XRotationObjective; 
+            current.Levels[i].FP_ZRotationObjective = current.Levels[i].fractalPreviewer._ZRotationObjective; 
+            current.Levels[i].FPFractalType = current.Levels[i].fractalPreviewer.FractalType; 
+            current.Levels[i].FPFractalPower = current.Levels[i].fractalPreviewer.fractalPower;
+
+
+            current.gamePlayLevel.RotXObjectif = current.Levels[i].fractalPreviewer._XRotationObjective;
+            current.gamePlayLevel.RotYObjectif = current.Levels[i].fractalPreviewer._ZRotationObjective;
+            current.gamePlayLevel.RotXPlayer = current.Levels[i].fractalPreviewer._XRotationPlayer;
+            current.gamePlayLevel.RotYPlayer = current.Levels[i].fractalPreviewer._ZRotationPlayer;
+        }
+
+
+        current.gamePlayLevel.fractalLevel = current.Levels.ToArray();
     }
 
 }

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32747aa9c23e63e44bee45bce8c33cf3, type: 3}
+  m_Name: FractalLevels1
+  m_EditorClassIdentifier: 
+  fractalPlayer: {fileID: 0}
+  fractalObjective: {fileID: 0}
+  levelWindowRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  fractalPreviewer: {fileID: 0}
+  FPColorPlayer1: {r: 0, g: 0, b: 0, a: 0}
+  FPColorPlayer2: {r: 0, g: 0, b: 0, a: 0}
+  FPColorObjective1: {r: 0, g: 0, b: 0, a: 0}
+  FPColorObjective2: {r: 0, g: 0, b: 0, a: 0}
+  FP_XRotationPlayer: 0
+  FP_ZRotationPlayer: 0
+  FP_XRotationObjective: 0
+  FP_ZRotationObjective: 0
+  FPFractalType: 1
+  FPFractalPower: 1

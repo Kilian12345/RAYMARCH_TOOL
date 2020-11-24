@@ -1,7 +1,2 @@
-Base path: 'C:/Program Files/Unity/Hub/Editor/2019.4.12f1/Editor/Data', plugins path 'C:/Program Files/Unity/Hub/Editor/2019.4.12f1/Editor/Data/PlaybackEngines'
+Base path: 'D:/ENGINE/UNITY/2019.4.12f1/Editor/Data', plugins path 'D:/ENGINE/UNITY/2019.4.12f1/Editor/Data/PlaybackEngines'
 Cmd: initializeCompiler
-Cmd: preprocessCompute
-  insize=6270 outsize=6269 ok=1
-Cmd: compileComputeKernel
-  error: 2 plat 4 at FractalComputePreview.compute(76): incorrect number of arguments to numeric-type constructor
-  api=4 insize=6269 outsize=0 ok=0

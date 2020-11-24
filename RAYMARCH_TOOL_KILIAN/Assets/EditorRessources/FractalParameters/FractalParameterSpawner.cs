@@ -11,13 +11,13 @@ public static class FractalParameterSpawner
     public static FractalLevels AddFractalLevel(int index)
     {
         FractalParameter assetObj = ScriptableObject.CreateInstance<FractalParameter>();
-        AssetDatabase.CreateAsset(assetObj, String.Format("Assets/EditorRessources/FractalParameters/{0}.asset", "FractalParameters" + index.ToString()));
+        AssetDatabase.CreateAsset(assetObj, String.Format("Assets/ScriptableObject/{0}.asset", "FractalParameters" + index.ToString()));
 
         FractalParameterPlayer assetPla = ScriptableObject.CreateInstance<FractalParameterPlayer>();
-        AssetDatabase.CreateAsset(assetPla, String.Format("Assets/EditorRessources/FractalParameters/{0}.asset", "FractalParametersPlayer" + index.ToString()));
+        AssetDatabase.CreateAsset(assetPla, String.Format("Assets/ScriptableObject/{0}.asset", "FractalParametersPlayer" + index.ToString()));
 
         FractalLevels asset = ScriptableObject.CreateInstance<FractalLevels>();
-        AssetDatabase.CreateAsset(asset, String.Format("Assets/EditorRessources/Levels/{0}.asset", "FractalLevels" + index.ToString()));
+        AssetDatabase.CreateAsset(asset, String.Format("Assets/ScriptableObject/{0}.asset", "FractalLevels" + index.ToString()));
         EditorUtility.FocusProjectWindow();
 
         asset.fractalObjective = assetObj;

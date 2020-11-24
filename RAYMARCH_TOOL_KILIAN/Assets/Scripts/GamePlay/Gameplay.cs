@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class Gameplay : MonoBehaviour
 {
-    [SerializeField] FractalMaster fractalRenderer;
-    [SerializeField] UIManager uiManager;
+    private static Gameplay _instance;
+    public static Gameplay instance { get { return _instance; } }
 
+    [SerializeField] FractalMaster fractalRenderer;
+    [SerializeField] UIManager uiManager;  
+
+    public GameplayLevels gamePlayLevels;
 
     public float axisStrength = 0.33f;
     [Range(0,0.1f)]public float alignmentPrecision = 0.33f;
@@ -14,6 +18,10 @@ public class Gameplay : MonoBehaviour
     public float _ZRotationAxisObjectif;
     public float _XRotationAxisPlayer;
     public float _ZRotationAxisPlayer;
+ 
+ 
+ 
+ 
 
     //DEBUG
     public float _XRotOBJ;
@@ -24,9 +32,33 @@ public class Gameplay : MonoBehaviour
     private bool XisAligned;
     private bool ZisAligned;
 
+    private float waitTimeForNextLevel = 3;
+    private int levelIndex = 0;
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
+
     private void Start()
     {
-        SetupInputToRenderer();
+        if (gamePlayLevels != null && gamePlayLevels.fractalLevel.Length > 0)
+        {
+            SetupToRenderer(gamePlayLevels.fractalLevel[0]);
+        }
+
+        _XRotationAxisObjectif = gamePlayLevels.RotXObjectif;
+        _ZRotationAxisObjectif = gamePlayLevels.RotYObjectif;
+        _XRotationAxisPlayer = gamePlayLevels.RotXPlayer;
+        _ZRotationAxisPlayer = gamePlayLevels.RotYPlayer;
     }
 
     private void Update()
@@ -36,12 +68,23 @@ public class Gameplay : MonoBehaviour
     }
 
 
-    void SetupInputToRenderer()
+    void SetupToRenderer(FractalLevels fl)
     {
-        fractalRenderer._XRotationAxisPlayer = _XRotationAxisPlayer;
-        fractalRenderer._ZRotationAxisPlayer = _ZRotationAxisPlayer;
-        fractalRenderer._XRotationAxisObjectif = _XRotationAxisObjectif;
-        fractalRenderer._ZRotationAxisObjectif = _ZRotationAxisObjectif;
+
+        fractalRenderer._XRotationAxisPlayer = fl.FP_XRotationPlayer; 
+        fractalRenderer._ZRotationAxisPlayer = fl.FP_ZRotationPlayer;
+        fractalRenderer._XRotationAxisObjectif = fl.FP_XRotationObjective;
+        fractalRenderer._ZRotationAxisObjectif = fl.FP_ZRotationObjective;
+
+        fractalRenderer.ColorPlayer1 = fl.FPColorPlayer1;
+        fractalRenderer.ColorPlayer2 = fl.FPColorPlayer2;
+
+        fractalRenderer.ColorObjective1 = fl.FPColorObjective1;
+        fractalRenderer.ColorObjective2 = fl.FPColorObjective2;
+
+        fractalRenderer.FractalType = fl.FPFractalType;
+        fractalRenderer.fractalPower = fl.FPFractalPower;
+        //fractalRenderer.
     }
 
     void SendInputToRenderer()
@@ -82,7 +125,7 @@ public class Gameplay : MonoBehaviour
     {
         if(XisAligned == true && ZisAligned == true)
         {
-            uiManager.Victory();
+            LevelVictory();
         }
 
 
@@ -108,5 +151,26 @@ public class Gameplay : MonoBehaviour
             ZisAligned = false;
             uiManager.DesactiveImageState(1);
         }
+    }
+
+    void FullVictory()
+    {
+
+    }
+
+    void LevelVictory()
+    {
+        uiManager.Victory();
+    }
+
+    IEnumerator WaitForNextLevel(int index)
+    {
+        yield return new WaitForSeconds(waitTimeForNextLevel);
+
+        if(index <= gamePlayLevels.fractalLevel.Length)
+        {
+            SetupToRenderer(gamePlayLevels.fractalLevel[index]);
+        }
+
     }
 }

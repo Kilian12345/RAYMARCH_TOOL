@@ -3,7 +3,11 @@ guid: 9e9dd86d91b315b4aa99a9da8643a1b0
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - fractalComputePreview: {instanceID: 0}
+  - fraktalRessource: {fileID: 11400000, guid: 37b09c59481e32549baf57035ba4ca2b, type: 2}
+  - fractalGameplayLevels: {fileID: 11400000, guid: 2079af10197b4c147b8b27d50b67d346,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
